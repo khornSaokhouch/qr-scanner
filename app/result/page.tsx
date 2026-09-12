@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { detectScanType } from "@/lib/qr-parser";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 function ResultContent() {
     const params = useSearchParams();
@@ -31,16 +32,16 @@ function ResultContent() {
     };
 
     return (
-        <div className="relative min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-6 selection:bg-indigo-500 selection:text-white">
+        <div className="relative min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col items-center justify-center p-6 selection:bg-indigo-500 selection:text-white transition-colors duration-300">
             {/* Background Glow */}
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-indigo-600/15 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-indigo-400/10 dark:bg-indigo-600/15 blur-[120px] rounded-full pointer-events-none" />
 
             <main className="relative z-10 w-full max-w-lg">
                 {/* Top Header */}
                 <div className="flex items-center justify-between mb-6">
                     <Link
                         href="/scanner"
-                        className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+                        className="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                     >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -48,32 +49,35 @@ function ResultContent() {
                         Scan Another
                     </Link>
 
-                    {/* Type Badge */}
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                        {type}
-                    </span>
+                    <div className="flex items-center gap-3">
+                        {/* Type Badge */}
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/20">
+                            {type}
+                        </span>
+                        <ThemeToggle />
+                    </div>
                 </div>
 
                 {/* Main Card */}
-                <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
-                    <div className="flex items-center justify-between pb-4 border-b border-slate-800/80">
-                        <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                <div className="bg-white dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-lg dark:shadow-2xl transition-colors">
+                    <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800/80">
+                        <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
                             Scan Detected
                         </h1>
-                        <span className="text-xs font-mono text-slate-400">
+                        <span className="text-xs font-mono text-slate-400 dark:text-slate-500">
                             {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                         </span>
                     </div>
 
                     {/* Value Box */}
                     <div className="mt-6">
-                        <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 block">
+                        <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 block">
                             Decoded Content
                         </label>
                         <div className="relative group">
-                            <div className="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-4 font-mono text-sm text-slate-200 break-all max-h-56 overflow-y-auto select-all scrollbar-thin">
-                                {value || <span className="text-slate-500 italic">No content found.</span>}
+                            <div className="w-full bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl p-4 font-mono text-sm text-slate-800 dark:text-slate-200 break-all max-h-56 overflow-y-auto select-all transition-colors">
+                                {value || <span className="text-slate-400 dark:text-slate-500 italic">No content found.</span>}
                             </div>
                         </div>
                     </div>
@@ -136,17 +140,18 @@ function ResultContent() {
                         {/* Copy Button */}
                         <button
                             onClick={handleCopy}
-                            className={`flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-medium text-sm border transition-all active:scale-[0.98] ${copied
-                                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                                    : "bg-slate-800/80 hover:bg-slate-800 text-slate-200 border-slate-700/80"
-                                }`}
+                            className={`flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-medium text-sm border transition-all active:scale-[0.98] ${
+                                copied
+                                    ? "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
+                                    : "bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700/80"
+                            }`}
                         >
                             {copied ? (
                                 <>
-                                    <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <svg className="w-4 h-4 text-emerald-500 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                     </svg>
-                                    Copied to Clipboard!
+                                    Copied!
                                 </>
                             ) : (
                                 <>
@@ -164,7 +169,7 @@ function ResultContent() {
                 <div className="mt-8 text-center">
                     <Link
                         href="/scanner"
-                        className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors text-sm font-medium"
+                        className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 transition-colors text-sm font-medium shadow-sm dark:shadow-none"
                     >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
@@ -183,7 +188,7 @@ export default function ResultPage() {
     return (
         <Suspense
             fallback={
-                <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+                <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center transition-colors">
                     <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
                 </div>
             }
