@@ -2,7 +2,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider, themeScript } from "@/components/ThemeProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,6 +20,11 @@ export const metadata: Metadata = {
   title: "SmartScan – Scan QR Codes & Barcodes Instantly",
   description:
     "Instantly capture QR codes, barcodes, and text with sub-second optical recognition directly from your browser. Private, secure, and fast.",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -31,12 +38,20 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        {/* Anti-FOUC: apply theme class before first paint */}
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <ThemeProvider>{children}</ThemeProvider>
+      <body
+        className="min-h-full flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300"
+        suppressHydrationWarning
+      >
+        <ThemeProvider>
+          {/* Sticky Header */}
+          <Navbar />
+
+          {/* Page Content */}
+          <main className="flex-1">{children}</main>
+
+          {/* Global Footer */}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

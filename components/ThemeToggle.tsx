@@ -27,9 +27,8 @@ export function ThemeToggle() {
             {/* Sun icon — shown in dark mode (click to go light) */}
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`absolute w-4.5 h-4.5 transition-all duration-300 ${
-                    isDark ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-90 scale-50"
-                }`}
+                className={`absolute w-4.5 h-4.5 transition-all duration-300 ${isDark ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-90 scale-50"
+                    }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -45,9 +44,8 @@ export function ThemeToggle() {
             {/* Moon icon — shown in light mode (click to go dark) */}
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`absolute w-4.5 h-4.5 transition-all duration-300 ${
-                    isDark ? "opacity-0 -rotate-90 scale-50" : "opacity-100 rotate-0 scale-100"
-                }`}
+                className={`absolute w-4.5 h-4.5 transition-all duration-300 ${isDark ? "opacity-0 -rotate-90 scale-50" : "opacity-100 rotate-0 scale-100"
+                    }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
