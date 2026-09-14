@@ -216,12 +216,34 @@ export default function Home() {
                 &ldquo;I built SmartScan because modern scanner apps are filled with invasive tracking, paywalls, and slow ad screens. SmartScan gives you an instant, hardware-accelerated scanning tool directly in your browser with 100% of the image processing remaining on your device.&rdquo;
               </p>
 
-              <div className="mt-5 flex items-center justify-center sm:justify-start gap-4 text-sm font-medium">
-                <span className="text-slate-900 dark:text-white font-semibold">SmartScan Creator</span>
-                <span className="text-slate-400 dark:text-slate-600">•</span>
+              <div className="mt-6 flex flex-wrap items-center justify-center sm:justify-start gap-3.5 text-sm font-medium">
+                {/* Buy Me a Coffee Button */}
+                <Link
+                  href="/coffee"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 shadow-sm transition-all active:scale-95"
+                >
+                  {/* Coffee Cup Icon */}
+                  <svg
+                    className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"
+                    />
+                  </svg>
+                  <span>Buy me a coffee</span>
+                </Link>
+
+                <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
+
                 <Link
                   href="/scanner"
-                  className="text-indigo-600 dark:text-indigo-400 hover:underline"
+                  className="text-xs sm:text-sm text-indigo-600 dark:text-indigo-400 hover:underline font-semibold"
                 >
                   Try the scanner &rarr;
                 </Link>

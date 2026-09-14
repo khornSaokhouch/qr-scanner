@@ -1,9 +1,32 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTheme } from "./ThemeProvider";
 
 export function ThemeToggle() {
     const { theme, toggle } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    // Only render the active theme state after mounting on client
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Placeholder during SSR & initial hydration (matches your exact button size)
+    if (!mounted) {
+        return (
+            <div
+                className="
+                    w-9 h-9 rounded-xl
+                    border border-slate-200 dark:border-slate-700
+                    bg-white dark:bg-slate-800
+                    shadow-sm
+                "
+                aria-hidden="true"
+            />
+        );
+    }
+
     const isDark = theme === "dark";
 
     return (

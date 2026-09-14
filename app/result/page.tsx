@@ -62,16 +62,28 @@ function ResultContent() {
         }
     };
 
+    // FIXED: Prevents duplicate links by sending ONLY 'url' for URLs or ONLY 'text' for non-URLs
     const handleShare = async () => {
-        if (!navigator.share) return handleCopy(value);
+        if (typeof navigator === "undefined" || !navigator.share) {
+            return handleCopy(value);
+        }
+
         try {
-            await navigator.share({
-                title: "SmartScan Result",
-                text: value,
-                url: isUrl ? value : undefined,
-            });
+            if (isUrl) {
+                // When sharing a URL, send ONLY the url property so apps don't print it twice
+                await navigator.share({
+                    title: "SmartScan Result",
+                    url: value,
+                });
+            } else {
+                // For barcodes, text, or phone numbers, send ONLY the text property
+                await navigator.share({
+                    title: "SmartScan Result",
+                    text: value,
+                });
+            }
         } catch {
-            // User cancelled or share failed
+            // User dismissed or closed the share menu
         }
     };
 
@@ -217,8 +229,8 @@ function ResultContent() {
                         <button
                             onClick={() => handleCopy(value)}
                             className={`min-h-[44px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm border active:scale-95 transition-all ${copied
-                                    ? "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
-                                    : "bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700/80"
+                                ? "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
+                                : "bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700/80"
                                 }`}
                         >
                             {copied ? (
