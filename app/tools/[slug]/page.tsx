@@ -6,7 +6,6 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
-// Config metadata and styling for each platform
 const PLATFORMS: Record<string, {
     name: string;
     placeholder: string;
@@ -88,6 +87,7 @@ export default function ToolPage() {
 
     const [url, setUrl] = useState("");
     const [loading, setLoading] = useState(false);
+    const [downloadingId, setDownloadingId] = useState<string | null>(null);
     const [error, setError] = useState("");
     const [videoData, setVideoData] = useState<any | null>(null);
     const [activeTab, setActiveTab] = useState<"video" | "audio">("video");
@@ -142,18 +142,33 @@ export default function ToolPage() {
         }
     }
 
-    // Trigger download through proxy or invisible anchor
-    const handleDownload = (fileUrl: string, ext = "mp4") => {
+    // DIRECT DOWNLOAD TRIGGER (NEVER OPENS A NEW PAGE)
+    const handleDownload = (fileUrl: string, ext = "mp4", buttonId: string) => {
+        if (!fileUrl) return;
+
+        setDownloadingId(buttonId);
+
         const title = videoData?.title || config.name;
-        const filename = `${title.replace(/[^a-z0-9]/gi, "_").toLowerCase()}.${ext}`;
+        const cleanTitle = title
+            .replace(/[^a-zA-Z0-9_\-\u1780-\u17FF]/g, "_")
+            .substring(0, 40)
+            .toLowerCase();
+
+        const filename = `${cleanTitle}.${ext}`;
         const proxyUrl = `/api/download-proxy?url=${encodeURIComponent(fileUrl)}&filename=${encodeURIComponent(filename)}`;
 
+        // Create invisible anchor in current page — no new tab is created
         const a = document.createElement("a");
         a.href = proxyUrl;
         a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+
+        // Reset spinner after download starts
+        setTimeout(() => {
+            setDownloadingId(null);
+        }, 3000);
     };
 
     async function pasteFromClipboard() {
@@ -348,48 +363,77 @@ export default function ToolPage() {
                                         )}
                                     </div>
 
-                                    {/* Action Buttons List */}
+                                    {/* Action Buttons List (All Trigger Direct Downloads) */}
                                     <div className="flex flex-col gap-2">
                                         {activeTab === "video" ? (
                                             videoFormats.length > 0 ? (
-                                                videoFormats.map((format: any, idx: number) => (
-                                                    <button
-                                                        key={idx}
-                                                        onClick={() => handleDownload(format.url, format.ext || "mp4")}
-                                                        className="min-h-[44px] flex items-center justify-between px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition active:scale-[0.99]"
-                                                    >
-                                                        <span className="flex items-center gap-2">
-                                                            <svg className="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />
-                                                            </svg>
-                                                            <span>{format.format_note || `${format.height || 720}p Resolution`}</span>
-                                                        </span>
-                                                        <span className="text-[11px] font-mono text-slate-400 uppercase">
-                                                            .{format.ext || "mp4"}
-                                                        </span>
-                                                    </button>
-                                                ))
+                                                videoFormats.map((format: any, idx: number) => {
+                                                    const btnId = `video-${idx}`;
+                                                    const isDownloading = downloadingId === btnId;
+
+                                                    return (
+                                                        <button
+                                                            key={idx}
+                                                            type="button"
+                                                            onClick={() => handleDownload(format.url, format.ext || "mp4", btnId)}
+                                                            disabled={isDownloading}
+                                                            className="min-h-[44px] flex items-center justify-between px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition active:scale-[0.99] disabled:opacity-75"
+                                                        >
+                                                            <span className="flex items-center gap-2">
+                                                                {isDownloading ? (
+                                                                    <div className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                                                                ) : (
+                                                                    <svg className="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />
+                                                                    </svg>
+                                                                )}
+                                                                <span>
+                                                                    {isDownloading ? "Starting Download..." : format.format_note || `${format.height || 720}p Resolution`}
+                                                                </span>
+                                                            </span>
+                                                            <span className="text-[11px] font-mono text-slate-400 uppercase">
+                                                                .{format.ext || "mp4"}
+                                                            </span>
+                                                        </button>
+                                                    );
+                                                })
                                             ) : (
                                                 <button
-                                                    onClick={() => handleDownload(videoData.videoUrl, "mp4")}
+                                                    type="button"
+                                                    onClick={() => handleDownload(videoData.videoUrl, "mp4", "video-main")}
+                                                    disabled={downloadingId === "video-main"}
                                                     className={`min-h-[44px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-md transition active:scale-[0.99] ${config.accentColor}`}
                                                 >
-                                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />
-                                                    </svg>
-                                                    <span>Download Best Quality (.MP4)</span>
+                                                    {downloadingId === "video-main" ? (
+                                                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                                    ) : (
+                                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />
+                                                        </svg>
+                                                    )}
+                                                    <span>
+                                                        {downloadingId === "video-main" ? "Starting Download..." : "Download Video (.MP4)"}
+                                                    </span>
                                                 </button>
                                             )
                                         ) : (
                                             /* Audio Button */
                                             <button
-                                                onClick={() => handleDownload(audioFormats[0]?.url || videoData.audioUrl, "mp3")}
+                                                type="button"
+                                                onClick={() => handleDownload(audioFormats[0]?.url || videoData.audioUrl, "mp3", "audio-main")}
+                                                disabled={downloadingId === "audio-main"}
                                                 className="min-h-[44px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md active:scale-[0.99] transition"
                                             >
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                                                </svg>
-                                                <span>Download Audio Track (.MP3)</span>
+                                                {downloadingId === "audio-main" ? (
+                                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                                ) : (
+                                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                                                    </svg>
+                                                )}
+                                                <span>
+                                                    {downloadingId === "audio-main" ? "Preparing MP3..." : "Download Audio Track (.MP3)"}
+                                                </span>
                                             </button>
                                         )}
                                     </div>
