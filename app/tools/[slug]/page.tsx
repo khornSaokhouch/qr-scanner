@@ -1,7 +1,7 @@
 // app/tools/[slug]/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -91,6 +91,36 @@ export default function ToolPage() {
     const [error, setError] = useState("");
     const [videoData, setVideoData] = useState<any | null>(null);
     const [activeTab, setActiveTab] = useState<"video" | "audio">("video");
+    const [resolvedDuration, setResolvedDuration] = useState<string>("");
+
+    // Automatically inspect stream buffer if duration is missing or "0:00"
+    useEffect(() => {
+        if (!videoData) {
+            setResolvedDuration("");
+            return;
+        }
+
+        if (videoData.duration && videoData.duration !== "0:00") {
+            setResolvedDuration(videoData.duration);
+            return;
+        }
+
+        const streamUrl = videoData.formats?.[0]?.url || videoData.videoUrl;
+        if (streamUrl) {
+            const tempVideo = document.createElement("video");
+            tempVideo.preload = "metadata";
+            tempVideo.src = streamUrl;
+
+            tempVideo.onloadedmetadata = () => {
+                if (tempVideo.duration && !isNaN(tempVideo.duration) && tempVideo.duration !== Infinity) {
+                    const totalSec = Math.floor(tempVideo.duration);
+                    const mins = Math.floor(totalSec / 60);
+                    const secs = totalSec % 60;
+                    setResolvedDuration(`${mins}:${secs.toString().padStart(2, "0")}`);
+                }
+            };
+        }
+    }, [videoData]);
 
     const validateUrl = (value: string) => {
         try {
@@ -119,6 +149,7 @@ export default function ToolPage() {
 
         setLoading(true);
         setVideoData(null);
+        setResolvedDuration("");
 
         try {
             const response = await fetch(`/api/tools/${slug}`, {
@@ -129,8 +160,12 @@ export default function ToolPage() {
 
             const json = await response.json();
 
-            if (!response.ok || !json.success) {
+            if (!response.ok || !json.success || !json.data) {
                 throw new Error(json.error || `Unable to extract video from ${config.name}.`);
+            }
+
+            if (!json.data.videoUrl && (!json.data.formats || json.data.formats.length === 0)) {
+                throw new Error("No downloadable video stream could be found for this post.");
             }
 
             setVideoData(json.data);
@@ -142,7 +177,7 @@ export default function ToolPage() {
         }
     }
 
-    // DIRECT DOWNLOAD TRIGGER (NEVER OPENS A NEW PAGE)
+    // DIRECT DOWNLOAD: Triggers file save without opening a new tab
     const handleDownload = (fileUrl: string, ext = "mp4", buttonId: string) => {
         if (!fileUrl) return;
 
@@ -157,7 +192,6 @@ export default function ToolPage() {
         const filename = `${cleanTitle}.${ext}`;
         const proxyUrl = `/api/download-proxy?url=${encodeURIComponent(fileUrl)}&filename=${encodeURIComponent(filename)}`;
 
-        // Create invisible anchor in current page — no new tab is created
         const a = document.createElement("a");
         a.href = proxyUrl;
         a.download = filename;
@@ -165,7 +199,6 @@ export default function ToolPage() {
         a.click();
         document.body.removeChild(a);
 
-        // Reset spinner after download starts
         setTimeout(() => {
             setDownloadingId(null);
         }, 3000);
@@ -313,9 +346,11 @@ export default function ToolPage() {
                                         </svg>
                                     </div>
                                 )}
-                                {videoData.duration && (
-                                    <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/70 text-white text-[11px] font-mono backdrop-blur-sm">
-                                        {videoData.duration}
+
+                                {/* DURATION BADGE */}
+                                {resolvedDuration && (
+                                    <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/75 text-white text-[11px] font-mono font-semibold backdrop-blur-sm shadow">
+                                        {resolvedDuration}
                                     </div>
                                 )}
                             </div>
@@ -363,7 +398,7 @@ export default function ToolPage() {
                                         )}
                                     </div>
 
-                                    {/* Action Buttons List (All Trigger Direct Downloads) */}
+                                    {/* Action Buttons List */}
                                     <div className="flex flex-col gap-2">
                                         {activeTab === "video" ? (
                                             videoFormats.length > 0 ? (
