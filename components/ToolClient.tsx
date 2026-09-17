@@ -1,12 +1,10 @@
-// app/tools/[slug]/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
-const PLATFORMS: Record<string, {
+export const PLATFORMS: Record<string, {
     name: string;
     placeholder: string;
     description: string;
@@ -80,9 +78,7 @@ const PLATFORMS: Record<string, {
     },
 };
 
-export default function ToolPage() {
-    const params = useParams();
-    const slug = (params?.slug as string)?.toLowerCase() || "tiktok";
+export default function ToolClient({ slug }: { slug: string }) {
     const config = PLATFORMS[slug] || PLATFORMS.tiktok;
 
     const [url, setUrl] = useState("");
@@ -177,8 +173,8 @@ export default function ToolPage() {
         }
     }
 
-    // 100% GUARANTEED DIRECT DOWNLOAD (BLOB STREAMING - ZERO PAGE NAVIGATION)
-    const handleDownload = async (fileUrl: string, ext = "mp4", buttonId: string) => {
+    // 100% GUARANTEED DIRECT DOWNLOAD (ZERO PAGE NAVIGATION)
+    const handleDownload = (fileUrl: string, ext = "mp4", buttonId: string) => {
         if (!fileUrl) return;
 
         setDownloadingId(buttonId);
@@ -192,38 +188,21 @@ export default function ToolPage() {
         const filename = `${cleanTitle}.${ext}`;
         const proxyUrl = `/api/download-proxy?url=${encodeURIComponent(fileUrl)}&filename=${encodeURIComponent(filename)}`;
 
-        try {
-            // Method A: Fetch as local blob (Same-origin blob download NEVER opens new tabs)
-            const response = await fetch(proxyUrl);
-            if (!response.ok) throw new Error("Proxy fetch failed");
+        // Use a hidden iframe to trigger the download.
+        // This streams the file directly to disk and prevents the browser from
+        // navigating away from the app if the proxy returns an error page.
+        const iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        iframe.src = proxyUrl;
+        document.body.appendChild(iframe);
 
-            const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
-
-            const link = document.createElement("a");
-            link.href = blobUrl;
-            link.setAttribute("download", filename);
-            link.style.display = "none";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            // Clean up memory
-            setTimeout(() => {
-                window.URL.revokeObjectURL(blobUrl);
-            }, 1000);
-        } catch {
-            // Method B: Silent fallback via invisible trigger
-            const link = document.createElement("a");
-            link.href = proxyUrl;
-            link.setAttribute("download", filename);
-            link.style.display = "none";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } finally {
+        // Reset the button state and clean up the DOM after a safe delay
+        setTimeout(() => {
+            if (document.body.contains(iframe)) {
+                document.body.removeChild(iframe);
+            }
             setDownloadingId(null);
-        }
+        }, 3000);
     };
 
     async function pasteFromClipboard() {
@@ -420,7 +399,7 @@ export default function ToolPage() {
                                         )}
                                     </div>
 
-                                    {/* Action Buttons List: No `target="_blank"`, strictly stays on current page */}
+                                    {/* Action Buttons List: No target="_blank", strictly stays on current page */}
                                     <div className="flex flex-col gap-2">
                                         {activeTab === "video" ? (
                                             videoFormats.length > 0 ? (
