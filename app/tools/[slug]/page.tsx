@@ -93,7 +93,7 @@ export default function ToolPage() {
     const [activeTab, setActiveTab] = useState<"video" | "audio">("video");
     const [resolvedDuration, setResolvedDuration] = useState<string>("");
 
-    // Automatically inspect stream buffer if duration is missing or "0:00"
+    // Auto-detect duration from video stream metadata if missing
     useEffect(() => {
         if (!videoData) {
             setResolvedDuration("");
@@ -177,8 +177,8 @@ export default function ToolPage() {
         }
     }
 
-    // DIRECT DOWNLOAD: Triggers file save without opening a new tab
-    const handleDownload = (fileUrl: string, ext = "mp4", buttonId: string) => {
+    // 100% GUARANTEED DIRECT DOWNLOAD (BLOB STREAMING - ZERO PAGE NAVIGATION)
+    const handleDownload = async (fileUrl: string, ext = "mp4", buttonId: string) => {
         if (!fileUrl) return;
 
         setDownloadingId(buttonId);
@@ -192,16 +192,38 @@ export default function ToolPage() {
         const filename = `${cleanTitle}.${ext}`;
         const proxyUrl = `/api/download-proxy?url=${encodeURIComponent(fileUrl)}&filename=${encodeURIComponent(filename)}`;
 
-        const a = document.createElement("a");
-        a.href = proxyUrl;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        try {
+            // Method A: Fetch as local blob (Same-origin blob download NEVER opens new tabs)
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error("Proxy fetch failed");
 
-        setTimeout(() => {
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.setAttribute("download", filename);
+            link.style.display = "none";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Clean up memory
+            setTimeout(() => {
+                window.URL.revokeObjectURL(blobUrl);
+            }, 1000);
+        } catch {
+            // Method B: Silent fallback via invisible trigger
+            const link = document.createElement("a");
+            link.href = proxyUrl;
+            link.setAttribute("download", filename);
+            link.style.display = "none";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } finally {
             setDownloadingId(null);
-        }, 3000);
+        }
     };
 
     async function pasteFromClipboard() {
@@ -398,7 +420,7 @@ export default function ToolPage() {
                                         )}
                                     </div>
 
-                                    {/* Action Buttons List */}
+                                    {/* Action Buttons List: No `target="_blank"`, strictly stays on current page */}
                                     <div className="flex flex-col gap-2">
                                         {activeTab === "video" ? (
                                             videoFormats.length > 0 ? (
@@ -423,7 +445,7 @@ export default function ToolPage() {
                                                                     </svg>
                                                                 )}
                                                                 <span>
-                                                                    {isDownloading ? "Starting Download..." : format.format_note || `${format.height || 720}p Resolution`}
+                                                                    {isDownloading ? "Downloading to device..." : format.format_note || `${format.height || 720}p Resolution`}
                                                                 </span>
                                                             </span>
                                                             <span className="text-[11px] font-mono text-slate-400 uppercase">
@@ -447,29 +469,56 @@ export default function ToolPage() {
                                                         </svg>
                                                     )}
                                                     <span>
-                                                        {downloadingId === "video-main" ? "Starting Download..." : "Download Video (.MP4)"}
+                                                        {downloadingId === "video-main" ? "Downloading to device..." : "Download Video (.MP4)"}
                                                     </span>
                                                 </button>
                                             )
                                         ) : (
-                                            /* Audio Button */
-                                            <button
-                                                type="button"
-                                                onClick={() => handleDownload(audioFormats[0]?.url || videoData.audioUrl, "mp3", "audio-main")}
-                                                disabled={downloadingId === "audio-main"}
-                                                className="min-h-[44px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md active:scale-[0.99] transition"
-                                            >
-                                                {downloadingId === "audio-main" ? (
-                                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                                ) : (
-                                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                                                    </svg>
-                                                )}
-                                                <span>
-                                                    {downloadingId === "audio-main" ? "Preparing MP3..." : "Download Audio Track (.MP3)"}
-                                                </span>
-                                            </button>
+                                            /* Audio Button(s) */
+                                            audioFormats.length > 0 ? (
+                                                audioFormats.map((audio: any, idx: number) => {
+                                                    const btnId = `audio-${idx}`;
+                                                    const isDownloading = downloadingId === btnId;
+
+                                                    return (
+                                                        <button
+                                                            key={idx}
+                                                            type="button"
+                                                            onClick={() => handleDownload(audio.url, "mp3", btnId)}
+                                                            disabled={isDownloading}
+                                                            className="min-h-[44px] flex items-center justify-between px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md active:scale-[0.99] transition disabled:opacity-75"
+                                                        >
+                                                            <span className="flex items-center gap-2">
+                                                                {isDownloading ? (
+                                                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                                                ) : (
+                                                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                                                                    </svg>
+                                                                )}
+                                                                <span>{isDownloading ? "Downloading MP3..." : audio.format_note || "Download Audio (.MP3)"}</span>
+                                                            </span>
+                                                            <span className="text-[11px] font-mono opacity-80 uppercase">.mp3</span>
+                                                        </button>
+                                                    );
+                                                })
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleDownload(videoData.audioUrl, "mp3", "audio-main")}
+                                                    disabled={downloadingId === "audio-main"}
+                                                    className="min-h-[44px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md active:scale-[0.99] transition"
+                                                >
+                                                    {downloadingId === "audio-main" ? (
+                                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                                    ) : (
+                                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                                                        </svg>
+                                                    )}
+                                                    <span>{downloadingId === "audio-main" ? "Downloading MP3..." : "Download Audio Track (.MP3)"}</span>
+                                                </button>
+                                            )
                                         )}
                                     </div>
                                 </div>
