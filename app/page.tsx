@@ -1,5 +1,4 @@
 import HeroSection from "@/components/home/HeroSection";
-import FeaturesSection from "@/components/home/FeaturesSection";
 import HowItWorksSection from "@/components/home/HowItWorksSection";
 import FounderSection from "@/components/home/FounderSection";
 import ToolsSection from "@/components/home/ToolsSection";
@@ -11,8 +10,6 @@ export default function Home() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-400/10 dark:bg-indigo-600/20 blur-[140px] rounded-full pointer-events-none" />
 
       <HeroSection />
-
-      <FeaturesSection />
 
       <ToolsSection />
 
