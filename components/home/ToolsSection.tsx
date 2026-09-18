@@ -62,7 +62,7 @@ export default function ToolsSection() {
         {
             title: "TikTok Downloader",
             description: "Download TikTok videos without watermark in HD or extract MP3 audio.",
-            href: "/tools/tiktok",
+            href: "/tiktok",
             category: "media",
             tag: "No Watermark",
             badgeColor: "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700",
@@ -74,7 +74,7 @@ export default function ToolsSection() {
         {
             title: "YouTube Downloader",
             description: "Download YouTube videos, Shorts, and audio tracks in high bitrate.",
-            href: "/tools/youtube",
+            href: "/youtube",
             category: "media",
             tag: "1080p & MP3",
             badgeColor: "bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-500/20",
@@ -86,7 +86,7 @@ export default function ToolsSection() {
         {
             title: "Instagram Downloader",
             description: "Save Instagram Reels, video posts, and carousel media directly.",
-            href: "/tools/instagram",
+            href: "/instagram",
             category: "media",
             tag: "Reels & Posts",
             badgeColor: "bg-pink-50 dark:bg-pink-500/10 text-pink-600 dark:text-pink-400 border-pink-200 dark:border-pink-500/20",
@@ -110,7 +110,7 @@ export default function ToolsSection() {
         {
             title: "X / Twitter Downloader",
             description: "Extract high-bitrate video clips and animated GIFs from posts on X.",
-            href: "/tools/x",
+            href: "/x",
             category: "media",
             tag: "MP4 & GIF",
             badgeColor: "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700",
@@ -122,7 +122,7 @@ export default function ToolsSection() {
         {
             title: "Pinterest Downloader",
             description: "Download high-resolution Pinterest video pins and animated media.",
-            href: "/tools/pinterest",
+            href: "/pinterest",
             category: "media",
             tag: "Direct Pin",
             badgeColor: "bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-500/20",
