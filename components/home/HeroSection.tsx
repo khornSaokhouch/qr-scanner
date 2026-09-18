@@ -61,7 +61,7 @@ export default function HeroSection() {
                 </Link>
 
                 <Link
-                    href="/create-qr"
+                    href="/create/qr"
                     className="flex items-center gap-2.5 p-3 rounded-2xl bg-white/70 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500/50 hover:shadow-md transition-all group"
                 >
                     <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">

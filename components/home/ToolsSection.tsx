@@ -38,7 +38,7 @@ export default function ToolsSection() {
         {
             title: "QR Code Generator",
             description: "Create custom QR codes for websites, Wi-Fi networks, text, and email.",
-            href: "/create-qr",
+            href: "/create/qr",
             category: "utility",
             tag: "Wi-Fi & Links",
             badgeColor: "bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-500/20",
@@ -160,8 +160,8 @@ export default function ToolsSection() {
                     <button
                         onClick={() => setActiveTab("all")}
                         className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${activeTab === "all"
-                                ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm"
-                                : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+                            ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm"
+                            : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
                             }`}
                     >
                         All Tools ({tools.length})
@@ -169,8 +169,8 @@ export default function ToolsSection() {
                     <button
                         onClick={() => setActiveTab("utility")}
                         className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${activeTab === "utility"
-                                ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm"
-                                : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+                            ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm"
+                            : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
                             }`}
                     >
                         QR &amp; PDF (3)
@@ -178,8 +178,8 @@ export default function ToolsSection() {
                     <button
                         onClick={() => setActiveTab("media")}
                         className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${activeTab === "media"
-                                ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm"
-                                : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+                            ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm"
+                            : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
                             }`}
                     >
                         Media Downloaders (6)
