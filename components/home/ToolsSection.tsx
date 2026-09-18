@@ -98,7 +98,7 @@ export default function ToolsSection() {
         {
             title: "Facebook Downloader",
             description: "Extract public Facebook videos and Watch reels in full resolution.",
-            href: "/tools/facebook",
+            href: "/facebook",
             category: "media",
             tag: "HD Video",
             badgeColor: "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-500/20",
