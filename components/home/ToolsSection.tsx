@@ -36,6 +36,22 @@ export default function ToolsSection() {
             icon: <QrScannerIcon />,
         },
         {
+            title: "Voice & Speech Studio",
+            description: "Transcribe voice to text and convert written text to realistic audio speech.",
+            href: "/voice",
+            category: "utility",
+            tag: "Voice & Audio",
+            badgeColor: "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-500/20",
+            hoverBorder: "hover:border-indigo-400 dark:hover:border-indigo-500/60",
+            hoverGlow: "hover:shadow-indigo-500/10",
+            iconBg: "bg-indigo-50 dark:bg-indigo-500/10 border-indigo-100 dark:border-indigo-500/20",
+            icon: (
+                <svg className="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+            ),
+        },
+        {
             title: "QR Code Generator",
             description: "Create custom QR codes for websites, Wi-Fi networks, text, and email.",
             href: "/create/qr",
@@ -58,6 +74,18 @@ export default function ToolsSection() {
             hoverGlow: "hover:shadow-rose-500/10",
             iconBg: "bg-rose-50 dark:bg-rose-500/10 border-rose-100 dark:border-rose-500/20",
             icon: <PdfIcon />,
+        },
+        {
+            title: "AI Resume & CV Builder",
+            description: "Build, style, and generate a professional CV using Google Gemini AI.",
+            href: "/create-cv",
+            category: "utility",
+            tag: "AI Powered",
+            badgeColor: "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-500/20",
+            hoverBorder: "hover:border-indigo-400 dark:hover:border-indigo-500/60",
+            hoverGlow: "hover:shadow-indigo-500/10",
+            iconBg: "bg-indigo-50 dark:bg-indigo-500/10 border-indigo-100 dark:border-indigo-500/20",
+            icon: <SparklesIcon />,
         },
         {
             title: "TikTok Downloader",
@@ -334,6 +362,19 @@ function PinterestIcon() {
     return (
         <svg className="w-6 h-6 fill-red-600" viewBox="0 0 24 24">
             <path d="M12 0a12 12 0 0 0-4.37 23.17c-.07-.99-.13-2.52.03-3.61l1.15-4.88s-.29-.59-.29-1.46c0-1.37.79-2.39 1.78-2.39.84 0 1.25.63 1.25 1.39 0 .85-.54 2.11-.82 3.29-.23 1 .5 1.81 1.49 1.81 1.78 0 3.16-1.88 3.16-4.6 0-2.4-1.73-4.08-4.19-4.08-2.86 0-4.53 2.14-4.53 4.36 0 .86.33 1.79.74 2.29a.3.3 0 0 1 .07.29c-.08.33-.26 1.05-.29 1.2-.05.2-.16.25-.37.15-1.39-.65-2.26-2.67-2.26-4.3 0-3.5 2.54-6.72 7.34-6.72 3.86 0 6.85 2.75 6.85 6.42 0 3.83-2.42 6.92-5.77 6.92-1.13 0-2.19-.59-2.55-1.28l-.69 2.65c-.25.97-.93 2.19-1.39 2.93A12 12 0 1 0 12 0z" />
+        </svg>
+    );
+}
+
+function SparklesIcon() {
+    return (
+        <svg className="w-5 h-5 text-indigo-600 dark:text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 11.5l-1.58 1.58" />
+            <path d="M12 2l3.36 8.39" />
+            <path d="M12 2l-3.36 8.39" />
+            <path d="M2 12l8.39 3.36" />
+            <path d="M2 12l8.39-3.36" />
+            <path d="M12 22l2.72-6.8a6 6 0 1 0-5.44 0L12 22z" />
         </svg>
     );
 }
