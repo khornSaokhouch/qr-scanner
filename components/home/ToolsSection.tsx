@@ -186,7 +186,7 @@ export default function ToolsSection() {
         {
             title: "AI Video Voice Translator",
             description: "Translate English or Chinese video speech into natural Khmer voiceover.",
-            href: "/tools/video-translate",
+            href: "/video-translate",
             category: "media",
             tag: "Voice Dubbing",
             badgeColor: "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-500/20",
