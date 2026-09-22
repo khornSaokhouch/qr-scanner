@@ -36,6 +36,30 @@ export default function ToolsSection() {
             icon: <QrScannerIcon />,
         },
         {
+            title: "Image Resize",
+            description: "Resize images to exact dimensions.",
+            href: "/image-resize",
+            category: "utility",
+            tag: "Image Dimension",
+            badgeColor: "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-500/20",
+            hoverBorder: "hover:border-indigo-400 dark:hover:border-indigo-500/60",
+            hoverGlow: "hover:shadow-indigo-500/10",
+            iconBg: "bg-indigo-50 dark:bg-indigo-500/10 border-indigo-100 dark:border-indigo-500/20",
+            icon: <ResizeIcon />,
+        },
+        {
+            title: "Image Compressor",
+            description: "Reduce image file size quickly.",
+            href: "/image-compressor",
+            category: "utility",
+            tag: "Image Dimension",
+            badgeColor: "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-500/20",
+            hoverBorder: "hover:border-indigo-400 dark:hover:border-indigo-500/60",
+            hoverGlow: "hover:shadow-indigo-500/10",
+            iconBg: "bg-indigo-50 dark:bg-indigo-500/10 border-indigo-100 dark:border-indigo-500/20",
+            icon: <CompressIcon />,
+        },
+        {
             title: "Voice & Speech Studio",
             description: "Transcribe voice to text and convert written text to realistic audio speech.",
             href: "/voice",
@@ -158,6 +182,22 @@ export default function ToolsSection() {
             hoverGlow: "hover:shadow-red-500/10",
             iconBg: "bg-red-50 dark:bg-red-500/10 border-red-100 dark:border-red-500/20",
             icon: <PinterestIcon />,
+        },
+        {
+            title: "AI Video Voice Translator",
+            description: "Translate English or Chinese video speech into natural Khmer voiceover.",
+            href: "/tools/video-translate",
+            category: "media",
+            tag: "Voice Dubbing",
+            badgeColor: "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-500/20",
+            hoverBorder: "hover:border-indigo-400 dark:hover:border-indigo-500/60",
+            hoverGlow: "hover:shadow-indigo-500/10",
+            iconBg: "bg-indigo-50 dark:bg-indigo-500/10 border-indigo-100 dark:border-indigo-500/20",
+            icon: (
+                <svg className="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+            ),
         },
     ];
 
@@ -375,6 +415,27 @@ function SparklesIcon() {
             <path d="M2 12l8.39 3.36" />
             <path d="M2 12l8.39-3.36" />
             <path d="M12 22l2.72-6.8a6 6 0 1 0-5.44 0L12 22z" />
+        </svg>
+    );
+}
+
+function ResizeIcon() {
+    return (
+        <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M13 3H6c-1.66 0-3 1.34-3 3v11c0 1.66 1.34 3 3 3h11c1.66 0 3-1.34 3-3V10L13 3z" />
+            <path d="M13 3v7h7" />
+            <polyline points="15 16 18 13 21 16" />
+            <line x1="18" y1="13" x2="18" y2="21" />
+        </svg>
+    );
+}
+
+function CompressIcon() {
+    return (
+        <svg className="w-5 h-5 text-indigo-600 dark:text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="8" />
+            <path d="M8 12l2 2 4-4" />
+            <path d="M12 2a10 10 0 0 0-8 8 10 10 0 0 0 8 8 10 10 0 0 0 8-8 10 10 0 0 0-8-8z" />
         </svg>
     );
 }
