@@ -199,6 +199,22 @@ export default function ToolsSection() {
                 </svg>
             ),
         },
+        {
+            title: "Khmer Voice Calculator",
+            description: "Calculates numbers while speaking each digit and operator in natural Khmer voice.",
+            href: "/calculator",
+            category: "utility",
+            tag: "Khmer Voice",
+            badgeColor: "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-500/20",
+            hoverBorder: "hover:border-indigo-400 dark:hover:border-indigo-500/60",
+            hoverGlow: "hover:shadow-indigo-500/10",
+            iconBg: "bg-indigo-50 dark:bg-indigo-500/10 border-indigo-100 dark:border-indigo-500/20",
+            icon: (
+                <svg className="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+            ),
+        },
     ];
 
     const filteredTools = tools.filter((tool) => {
